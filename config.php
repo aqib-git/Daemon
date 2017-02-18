@@ -4,7 +4,8 @@ define('DB_NAME', 'python_db');
 define('DB_USER', 'root');
 define('DB_PASSWORD', 'password');
 define('DB_DRIVER', 'mysql');
-define('SCRIPT_PATH', '.');
+define('COMMAND', 'python');
+define('SCRIPT_PATH', './');
 define('SCRIPT_FILE', 'sleepy.py');
 define('MAX_PROCESS', 10);
 

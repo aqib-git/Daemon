@@ -10,6 +10,7 @@ if(exceedsLimit(MAX_PROCESS, $dbh)) {
 $current_ip = $_SERVER['REMOTE_ADDR'];
 $resultSet = ipRecordExists($dbh, $current_ip);
 if($resultSet  !== false) {
+	//records for ip exists
 	$id = filter_var($_GET['id'], FILTER_SANITIZE_STRING);
 	$start = (int)filter_var($_GET['start'], FILTER_SANITIZE_NUMBER_INT);
 	if(empty($id)) {
@@ -19,7 +20,7 @@ if($resultSet  !== false) {
 		die("post request must have start field");
 	}
 	if($id !== $resultSet['url_hash']){
-		die("id value is invalid");
+		die("id field is invalid");
 	}
 	$processPath = '/proc/'.$resultSet['pid'];
 	if(file_exists($processPath) && $start === 0) {

@@ -1,14 +1,14 @@
 <?php
 
 function createProcess($params) {
-	exec("screen -m -d python ".SCRIPT_PATH."/".SCRIPT_FILE." ".escapeshellarg($params));
-	exec("ps aux | grep ".SCRIPT_FILE ,$output);
-	$pid = 0;	
-	for($i = 0, $len = count($output); $i < $len-1; $i++){
-		if(strpos($output[$i],'SCREEN') !== false){
-				$pid = preg_split('/ +/', $output[$i])[1];
-		}
-	}
+	exec("screen -m -d ".COMMAND." ".SCRIPT_PATH.SCRIPT_FILE." ".escapeshellarg($params));
+	exec("ps aux | grep -i [S]CREEN | grep -F ".SCRIPT_PATH." | grep ".SCRIPT_FILE, $output);
+	$pid = 0;
+	$pidCount = count($output);
+	if($pidCount == 0) {
+		return $pid;
+	}	
+	$pid = preg_split('/ +/', $output[$pidCount-1])[1];
 	return $pid;
 }
 

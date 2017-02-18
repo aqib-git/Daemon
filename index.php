@@ -16,11 +16,8 @@ if($resultSet !== false) {
 			$query = 'UPDATE scripts SET status = ? WHERE id = ?';
 			$stmt = $dbh->prepare($query);
 			$stmt->execute(array(0, $resultSet['id']));
-			//fetch updated record
-			$query = 'SELECT *  FROM scripts WHERE id = ?';
-			$stmt = $dbh->prepare($query);
-			$stmt->execute(array($resultSet['id']));
-			$resultSet = $stmt->fetch(PDO::FETCH_ASSOC);
+			//update status
+			$resultSet['status'] = 0;
 			$stopmessage = "Process was stopped or completed";
 			$queryString= "?id=".$_GET['id'].'&start=1';
 			$queryString = htmlspecialchars($queryString, ENT_QUOTES, "UTF-8");
@@ -28,8 +25,9 @@ if($resultSet !== false) {
 			$queryString="?id=".$_GET['id'].'&start=0';
 			$queryString = htmlspecialchars($queryString, ENT_QUOTES, "UTF-8");
 		}
+		$showLink = true;
 	} else {
-		die("hash is invalid");
+		die("id parameter is invalid");
 	}
 }
 
@@ -46,13 +44,14 @@ if($resultSet !== false) {
 </script>
 </head>
 <body>
-<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+<div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1" style="margin-top: 100px;">
+	<h4>Start/Stop a python process with parameters as input.</h4>
 	<form method="post" action="process.php<?php echo empty($queryString) ? '' : $queryString; ?>">
 		<div class="form-group">
 			<input class="form-control" name="params" value="<?php echo empty($resultSet) ? '' : $resultSet['params']; ?>" placeholder="Enter python script params" required>
 		</div>
 		<div class="form-group">
-			<input type="submit" class="form-control btn btn-primary" name="submit" value="<?php echo empty($resultSet) ? 'start' : ($resultSet['status'] ? 'stop' : 'start'); ?>">
+			<input type="submit" class="form-control btn <?php echo empty($resultSet) ? 'btn-primary' : ($resultSet['status'] ? 'btn-danger' : 'btn-primary'); ?> " name="submit" value="<?php echo empty($resultSet) ? 'start' : ($resultSet['status'] ? 'stop' : 'start'); ?>">
 		</div>
 		<div class="form-group">
 			<?php if(!empty($stopmessage)){?>
@@ -62,6 +61,9 @@ if($resultSet !== false) {
 			<?php } ?>
 		</div>
 	</form>
+	<?php if(!empty($showLink)) { ?>
+	 Process link : http://<?php echo $_SERVER['REMOTE_ADDR'].'?id='.htmlspecialchars($_GET['id'], ENT_QUOTES, "UTF-8");?> (save this link to access this process next time)
+	<?php } ?>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
