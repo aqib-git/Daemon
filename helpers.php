@@ -38,5 +38,5 @@ function randomString($length = 16) {
 function exceedsLimit($limit, $dbh) {
 	$query = 'SELECT COUNT(*) FROM scripts';
 	$res = $dbh->query($query);
-	return $res->fetchColumn() > $limit;
+	return $res->fetchColumn() >= $limit;
 }
